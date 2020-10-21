@@ -1,18 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import { SocketProvider} from "../SocketProvider";
-import Dashboard from "./Dashboard";
-import Haikunator from "haikunator";
+import React from 'react';
+import ChatRouter from "../ChatRouter";
+import { ThemeProvider } from 'styled-components';
+import original from "react95/dist/themes/original";
 function App() {
-    const [name,setName] = useState('')
-    const haikunator = new Haikunator()
-    useEffect(() => {
-        setName(haikunator.haikunate())
-    },[])
   return (
-      <SocketProvider>
-          <Dashboard name = {name}/>
-      </SocketProvider>
-
+      <div>
+          <ThemeProvider theme={original}>
+            <ChatRouter/>
+          </ThemeProvider>
+      </div>
   );
 }
 

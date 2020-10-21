@@ -1,16 +1,12 @@
 import React, {useRef} from "react";
+import {TextField, Button} from "react95";
 import styled from "styled-components"
 
-const Button = styled.button`
-    
-`
-const Input = styled.input`
-    
-`
 const Wrapper = styled.div`
     display: flex;
     justify-content: center;
-    background-color: lightblue;
+    margin-top: 4vh;
+    width: 80%;
 `
 const MessageInput = ({onMessageSent}) => {
     const input = useRef(null);
@@ -24,10 +20,11 @@ const MessageInput = ({onMessageSent}) => {
     }
     return (
         <Wrapper>
-            <Input
+            <TextField
                 ref = {input}
-                type = {"text"}
+                type={"text"}
                 onKeyDown = {e => handleKeyDown(e)}
+                fullWidth
             />
             <Button
                 onClick = {handleSubmit}
