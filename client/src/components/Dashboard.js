@@ -42,11 +42,9 @@ const Dashboard = ({name}) => {
     const [activeTab, setActiveTab] = useState(0)
     const dispatch = useDispatch()
     const socket = useSocket(),{pathname} = useLocation();
-
     const handleTabChange = (e, value) => {
         setActiveTab(value)
     }
-
     const buildMessage = (senderName,message) => {
         return {
             timestamp: getTimeStamp(),
