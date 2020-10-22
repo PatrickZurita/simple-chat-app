@@ -7,6 +7,7 @@ import styled from "styled-components"
 import TabBar from "./tabs/TabBar";
 import ChatTab from "./tabs/ChatTab";
 import PrivateTab from "./tabs/PrivateTab";
+import getTimeStamp from "../helper/getTimeStamp";
 import  { addPrivateMessage } from "../app/features/messages/privateMessageSlice"
 import ms_sans_serif from "react95/dist/fonts/ms_sans_serif.woff2";
 import ms_sans_serif_bold from "react95/dist/fonts/ms_sans_serif_bold.woff2";
@@ -43,13 +44,7 @@ const Dashboard = ({name}) => {
     const socket = useSocket(),{pathname} = useLocation();
 
     const handleTabChange = (e, value) => setActiveTab(value)
-    const getTimeStamp = () =>{
-        return new Date().toLocaleTimeString("en-US", {
-            hour12: true,
-            hour: "numeric",
-            minute: "numeric",
-        }).toLowerCase()
-    }
+
     const buildMessage = (senderName,message) => {
         return {
             timestamp: getTimeStamp(),
@@ -72,8 +67,10 @@ const Dashboard = ({name}) => {
         }
     }
     const sendPrivateMessage = (recipient,message) => {
-        console.log(name)
-        if (message !== '') socket.emit('send-private-message',name,recipient,message)
+        if (message !== '') {
+            socket.emit('send-private-message',name,recipient,message)
+            dispatch(addPrivateMessage({sender:name, recipient:recipient, message:message,self:true}))
+        }
     }
     useEffect(() => {
         if (socket !== null) {
@@ -127,7 +124,7 @@ const Dashboard = ({name}) => {
         <Wrapper>
             <Window>
                 <WindowHeader className = "window-header">
-                    Welcome {name}, to the best! chat channel
+                    Welcome {name}, to the best! chat app
                     <Button>
                         &times;
                     </Button>
