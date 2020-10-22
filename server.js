@@ -23,8 +23,8 @@ io.on('connection', socket => {
         channels[channel].users[socket.id] = name
         socket.to(channel).broadcast.emit('user-connected', name)
     })
-    socket.on('send-private-message', (recipient,message) => {
-        socket.broadcast.to(recipient).emit('receive-private-message',{recipient,message})
+    socket.on('send-private-message', (sender,recipient,message) => {
+        socket.broadcast.to(recipient).emit('receive-private-message',{sender,message})
     })
     socket.on('send-chat-message', (channel, message) => {
         socket.to(channel).broadcast.emit('chat-message', {

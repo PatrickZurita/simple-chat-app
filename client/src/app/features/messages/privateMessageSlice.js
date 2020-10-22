@@ -5,11 +5,10 @@ const privateMessageSlice = createSlice({
     initialState:{},
     reducers: {
         addPrivateMessage: (state, action) => {
-            console.log(action.payload)
-            if (state[action.payload.recipient] === undefined)
-                state[action.payload.recipient] = [action.payload.message]
+            if (state[action.payload.sender] === undefined)
+                state[action.payload.sender] = [action.payload.message]
             else
-                state[action.payload.recipient].push(action.payload.message)
+                state[action.payload.sender].push(action.payload.message)
         },
     }
 })

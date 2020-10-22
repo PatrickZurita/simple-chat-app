@@ -2,24 +2,43 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useSocket} from "../contexts/SocketProvider";
 import {useLocation} from "react-router-dom"
 import {useDispatch} from "react-redux";
-import {TabBody, Window, WindowContent, WindowHeader} from 'react95';
+import {Button, TabBody, Window, WindowContent, WindowHeader} from 'react95';
 import styled from "styled-components"
-import capitalize from "../helper/capitalize";
 import TabBar from "./tabs/TabBar";
-import ChannelTab from "./tabs/ChannelTab";
+import ChatTab from "./tabs/ChatTab";
 import PrivateTab from "./tabs/PrivateTab";
 import  { addPrivateMessage } from "../app/features/messages/privateMessageSlice"
+import ms_sans_serif from "react95/dist/fonts/ms_sans_serif.woff2";
+import ms_sans_serif_bold from "react95/dist/fonts/ms_sans_serif_bold.woff2";
 
 const Wrapper = styled.div`
+    @font-face {
+        font-family: 'ms_sans_serif';
+        src: url('${ms_sans_serif}') format('woff2');
+        font-weight: 400;
+        font-style: normal
+      }
+      @font-face {
+        font-family: 'ms_sans_serif';
+        src: url('${ms_sans_serif_bold}') format('woff2');
+        font-weight: bold;
+        font-style: normal
+      }
     display: flex;
     flex-direction: column;
     min-width: 50vw;
+    font-family: "ms_sans_serif",serif;
+    .window-header {
+        display:  flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 `
 const Dashboard = ({name}) => {
     const [channel, setChannel] = useState('')
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState([])
-    const [activeTab, setActiveTab] = useState(0)
+    const [activeTab, setActiveTab] = useState(1)
     const dispatch = useDispatch()
     const socket = useSocket(),{pathname} = useLocation();
 
@@ -52,8 +71,9 @@ const Dashboard = ({name}) => {
             appendMessage('You',message)
         }
     }
-    const sendPrivateMessage = (id,message) => {
-        if (message !== '') socket.emit('send-private-message',id,message)
+    const sendPrivateMessage = (recipient,message) => {
+        console.log(name)
+        if (message !== '') socket.emit('send-private-message',name,recipient,message)
     }
     useEffect(() => {
         if (socket !== null) {
@@ -89,7 +109,7 @@ const Dashboard = ({name}) => {
     const renderSwitch = (active) => {
         switch (active) {
             case 0:
-                return <ChannelTab
+                return <ChatTab
                             messages = {messages}
                             channel = {channel}
                             name = {name}
@@ -107,7 +127,10 @@ const Dashboard = ({name}) => {
         <Wrapper>
             <Window>
                 <WindowHeader className = "window-header">
-                    Welcome {name}, to {capitalize(channel)} chat channel
+                    Welcome {name}, to the best! chat channel
+                    <Button>
+                        &times;
+                    </Button>
                 </WindowHeader>
                 <WindowContent>
                     <TabBar

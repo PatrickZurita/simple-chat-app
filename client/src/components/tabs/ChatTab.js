@@ -1,6 +1,6 @@
 import React from "react";
 import ChannelList from "../channels/ChannelList";
-import {Panel} from "react95";
+import {Cutout, Panel} from "react95";
 import MessageList from "../messages/MessageList";
 import UserList from "../users/UserList";
 import MessageInput from "../messages/MessageInput";
@@ -22,17 +22,17 @@ const Wrapper = styled.section`
     }
     
 `
-const ChannelTab = ({messages,channel,name,users,sendMessage}) => {
+const ChatTab = ({messages,channel,name,users,sendMessage}) => {
     return (
         <Wrapper>
                 <div className ="message-top">
                     <ChannelList/>
-                    <Panel
+                    <Cutout
                         variant={"well"}
                         style={{width:"100%",height:"50vh",overflowY:"auto"}}
                     >
                         <MessageList currentName ={name} messages={messages}/>
-                    </Panel>
+                    </Cutout>
                     <UserList users={users}/>
                 </div>
                 <MessageInput onMessageSent={sendMessage} />
@@ -40,4 +40,4 @@ const ChannelTab = ({messages,channel,name,users,sendMessage}) => {
 
     )
 }
-export default ChannelTab
+export default ChatTab
