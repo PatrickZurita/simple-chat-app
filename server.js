@@ -41,11 +41,3 @@ io.on('connection', socket => {
 })
 
 
-function getUserChannels(socket) {
-    return Object.entries(channels).reduce((names, [name, channel]) => {
-        if (channel.users[socket.id] !== null) names.push(name)
-        return names
-    }, [])
-}
-
-

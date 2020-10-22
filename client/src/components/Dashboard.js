@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useSocket} from "../contexts/SocketProvider";
 import {useLocation} from "react-router-dom"
 import {useDispatch} from "react-redux";
@@ -8,7 +8,7 @@ import capitalize from "../helper/capitalize";
 import TabBar from "./tabs/TabBar";
 import ChannelTab from "./tabs/ChannelTab";
 import PrivateTab from "./tabs/PrivateTab";
-import  { addPrivateMessage } from "../features/messages/privateMessageSlice"
+import  { addPrivateMessage } from "../app/features/messages/privateMessageSlice"
 
 const Wrapper = styled.div`
     display: flex;
@@ -20,7 +20,7 @@ const Dashboard = ({name}) => {
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState([])
     const [activeTab, setActiveTab] = useState(0)
-
+    const dispatch = useDispatch()
     const socket = useSocket(),{pathname} = useLocation();
 
     const handleTabChange = (e, value) => setActiveTab(value)
@@ -43,9 +43,9 @@ const Dashboard = ({name}) => {
         let index = users.indexOf(name)
         setUsers(users.splice(index,1))
     }
-    const appendMessage = (name, body) => {
+    const appendMessage = useCallback((name, body) => {
         setMessages([...messages,buildMessage(name,body)])
-    }
+    },[messages])
     const sendMessage = (message) => {
         if ( message !== '') {
             socket.emit('send-chat-message',channel, message)
@@ -55,19 +55,24 @@ const Dashboard = ({name}) => {
     const sendPrivateMessage = (id,message) => {
         if (message !== '') socket.emit('send-private-message',id,message)
     }
-    if (socket !== null) {
-        socket.on('user-connected', name => {
-            appendMessage('System',`${name} connected`)
-            addUser(name)
-        })
-        socket.on('user-disconnected', name => {
-            appendMessage('System',`${name} disconnected`)
-            removeUser(name)
-        })
-        socket.on('chat-message', data => {
-            appendMessage(`${data.name}`,`${data.message}`)
-        })
-    }
+    useEffect(() => {
+        if (socket !== null) {
+            socket.on('user-connected', name => {
+                appendMessage('System',`${name} connected`)
+                addUser(name)
+            })
+            socket.on('user-disconnected', name => {
+                appendMessage('System',`${name} disconnected`)
+                removeUser(name)
+            })
+            socket.on('chat-message', data => {
+                appendMessage(`${data.name}`,`${data.message}`)
+            })
+            socket.on('receive-private-message', data => {
+                dispatch(addPrivateMessage(data))
+            })
+        }
+    },[socket])
     useEffect(() => {
         //Create new User
         if (socket !== null && channel !== '') {
@@ -77,7 +82,8 @@ const Dashboard = ({name}) => {
     useEffect(() => {
         setChannel(pathname.substr(1))
         setMessages([])
-        appendMessage(`System`, `Joined ${pathname.substr(1)} chat!`)
+        if (socket == null) return
+        socket.emit('unsubscribe',{channel:channel,name:name})
     },[pathname])
 
     const renderSwitch = (active) => {
