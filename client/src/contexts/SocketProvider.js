@@ -9,7 +9,10 @@ export function useSocket () {
 export function SocketProvider({id, children}) {
     const [socket, setSocket] = useState(null)
     useEffect(()=> {
-        const newSocket = io('http://localhost:4000')
+        const newSocket = io(
+            'http://localhost:4000',
+            {query: {id}}
+        )
         setSocket(newSocket)
         return () => newSocket.close()
     }, [id])

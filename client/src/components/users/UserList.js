@@ -25,13 +25,13 @@ const Wrapper = styled.div`
 const UserList = ({users}) => {
     return (
         <Wrapper>
-            <div>{users.length + 1} online</div>
+
+            <div>{users.length + 1}  online</div>
             <div>
                 {users.map((user,i) => {
                     return <p key = {i}>{user}</p>
                 })}
             </div>
-
         </Wrapper>
     )
 }

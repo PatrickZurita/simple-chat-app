@@ -4,6 +4,7 @@ import Dashboard from "./components/Dashboard";
 import {SocketProvider} from "./contexts/SocketProvider";
 import Haikunator from "haikunator";
 import styled from "styled-components"
+import Home from "./components/Home";
 const Wrapper = styled.section`
     display: flex;
     background-color: teal;
@@ -13,20 +14,19 @@ const Wrapper = styled.section`
     min-height: 100vh;
 `
 const ChatRouter = () => {
-    const [name,setName] = useState('')
     const haikunator = new Haikunator()
-    useEffect(() => {
-        setName(haikunator.haikunate())
-    },[])
+    const [name,setName] = useState(haikunator.haikunate())
+    const handleNameChange = (newName) => {
+        setName(newName)
+    }
     return (
             <Router>
                 <Switch>
-                    <Route path={'/'} exact render = {() => <h1>Home</h1>}/>
+                    <Route path={'/'} exact render = {Home}/>
                     <Route path={'/'}>
                         <Wrapper>
-
                             <SocketProvider>
-                                <Dashboard name = {name}/>
+                                <Dashboard name = {name} onNameChange = {handleNameChange}/>
                             </SocketProvider>
                         </Wrapper>
                     </Route>
