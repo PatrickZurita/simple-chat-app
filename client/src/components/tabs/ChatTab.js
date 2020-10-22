@@ -22,7 +22,7 @@ const Wrapper = styled.section`
     }
     
 `
-const ChatTab = ({messages,channel,name,users,sendMessage}) => {
+const ChatTab = ({messages,name,users,sendMessage}) => {
     return (
         <Wrapper>
                 <div className ="message-top">

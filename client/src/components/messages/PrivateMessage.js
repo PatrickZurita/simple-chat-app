@@ -1,22 +1,16 @@
 import React from "react";
-import styled from "styled-components";
-
-const StyledMessage = styled.div`
-    display: flex;
-    align-content: center;
-`
-
+import {StyledMessage} from "./StyledMessage";
 const PrivateMessage = ({self,timestamp,senderName,message,reference}) => {
     if (self) {
         return (
-            <StyledMessage isSystemMessage ref = {reference}>
-                <p>{`${timestamp} You: ${message}`}</p>
+            <StyledMessage isSystemMessage ref = {reference} self>
+                <p>{`${message} ${timestamp}`}</p>
             </StyledMessage>
         )
     }
     return (
         <StyledMessage isSystemMessage ref = {reference}>
-            <p>{`${timestamp} ${senderName}: ${message}`}</p>
+            <p>{`${message} ${timestamp}`}</p>
         </StyledMessage>
     )
 }

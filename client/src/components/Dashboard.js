@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useSocket} from "../contexts/SocketProvider";
 import {useLocation} from "react-router-dom"
 import {useDispatch} from "react-redux";
@@ -39,11 +39,13 @@ const Dashboard = ({name}) => {
     const [channel, setChannel] = useState('')
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState([])
-    const [activeTab, setActiveTab] = useState(1)
+    const [activeTab, setActiveTab] = useState(0)
     const dispatch = useDispatch()
     const socket = useSocket(),{pathname} = useLocation();
 
-    const handleTabChange = (e, value) => setActiveTab(value)
+    const handleTabChange = (e, value) => {
+        setActiveTab(value)
+    }
 
     const buildMessage = (senderName,message) => {
         return {
@@ -58,8 +60,8 @@ const Dashboard = ({name}) => {
         setUsers(users.splice(index,1))
     }
     const appendMessage = useCallback((name, body) => {
-        setMessages([...messages,buildMessage(name,body)])
-    },[messages])
+        setMessages((currentMessages) => [...currentMessages,buildMessage(name,body)])
+    },[setMessages])
     const sendMessage = (message) => {
         if ( message !== '') {
             socket.emit('send-chat-message',channel, message)

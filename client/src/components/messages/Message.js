@@ -1,13 +1,16 @@
 import React from "react";
-import styled from "styled-components";
+import {StyledMessage} from "./StyledMessage";
 
-const StyledMessage = styled.div`
-    display: flex;
-    align-content: center;
-`
+
 
 const Message = ({reference,timestamp,senderName,message}) => {
     const isSystemMessage = senderName === 'System'
+    if (senderName === 'You')
+        return (
+            <StyledMessage isSystemMessage ref = {reference} self>
+                <p>{`You: ${message} ${timestamp}`}</p>
+            </StyledMessage>
+        )
     return (
         <StyledMessage isSystemMessage ref = {reference}>
             <p>{`${timestamp} ${isSystemMessage ? '' : senderName + ':'} ${message}`}</p>

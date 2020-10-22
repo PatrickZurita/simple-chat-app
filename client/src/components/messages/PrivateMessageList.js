@@ -4,8 +4,16 @@ import PrivateMessage from "./PrivateMessage";
 import styled from "styled-components"
 const Wrapper = styled.div`
      width: 80%;  
+     .empty {
+          width: 100%;
+          height: 50vh;
+          overflow-y:hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+     }
 `
-const PrivateMessageList = ({allMessages,selected,sendPrivate}) => {
+const PrivateMessageList = ({allMessages,selectedUser,sendPrivate}) => {
 
     const input = useRef(null)
     const lastMessageRef = useRef(null)
@@ -15,24 +23,25 @@ const PrivateMessageList = ({allMessages,selected,sendPrivate}) => {
     })
     const handleSubmit = () => {
         let message = input.current.value
-        if (message !== '') sendPrivate(selected,message)
+        if (message !== '') sendPrivate(selectedUser,message)
         input.current.value = ''
     }
-    if (allMessages[selected] !== undefined)
+    if (allMessages[selectedUser] !== undefined)
         return (
             <Wrapper>
+                <h1>Chat with {selectedUser}</h1>
                 <Cutout
                     variant={"well"}
-                    style={{width:"100%",height:"50vh",overflowY:"auto"}}
+                    style={{width:"100%",height:"39vh",overflowY:"auto",marginBottom:"1vh"}}
                 >
-                    { allMessages[selected].map((item,i) => {
-                        const lastMessage = allMessages[selected].length - 1 === i
+                    { allMessages[selectedUser].map((item, i) => {
+                        const lastMessage = allMessages[selectedUser].length - 1 === i
                         return (
                             <PrivateMessage
                                 reference={lastMessage ? lastMessageRef : null}
                                 self={item.self}
                                 message={item.message}
-                                senderName={selected}
+                                senderName={selectedUser}
                                 timestamp={item.timestamp}
                                 key = {i}/>
                         )
@@ -46,7 +55,18 @@ const PrivateMessageList = ({allMessages,selected,sendPrivate}) => {
         )
     else
         return (
-            <h1>Select a Conversation</h1>
+            <Wrapper>
+                <Cutout
+                    style={{width:"100%",height:"50vh"}}
+                >
+                    <div
+                        className = {"empty"}>
+                        <h1>Select a Conversation</h1>
+                    </div>
+
+                </Cutout>
+            </Wrapper>
+
         )
 }
 export default PrivateMessageList

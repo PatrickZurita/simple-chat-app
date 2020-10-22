@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import {useSelector} from "react-redux";
 import styled from "styled-components"
-import {Button,Fieldset} from "react95";
+import {Button, Divider, Fieldset, ListItem} from "react95";
 import ComposeMessage from "../messages/ComposeMessage";
 import PrivateMessageList from "../messages/PrivateMessageList";
 
@@ -19,6 +19,8 @@ const Wrapper = styled.section`
     .messengers {
         width: 8vw;
         margin: 0 1vw;
+        display: flex;
+        flex-direction: column;
     }
 `
 const PrivateTab = ({sendPrivate}) => {
@@ -34,7 +36,7 @@ const PrivateTab = ({sendPrivate}) => {
     }
     if (getAllSenders.length === 0) {
         return (
-            <div>
+            <Wrapper>
                 <h1>No Private Message</h1>
                 <p>Still you can <Button onClick={e => handleModalClick()}>Compose</Button> a Message </p>
                 <ComposeMessage
@@ -42,7 +44,7 @@ const PrivateTab = ({sendPrivate}) => {
                     handleModalClick={handleModalClick}
                     sendPrivate = {sendPrivate}
                 />
-            </div>
+            </Wrapper>
         )
     }
     return (
@@ -51,9 +53,10 @@ const PrivateTab = ({sendPrivate}) => {
                 <Fieldset label={"Conversations"} className = {"messengers"}>
                     {Object.keys(allMessages).map((sender, i) => {
                         return (
-                            <div key = {i} onClick={e => handleClick(sender)}>
+                            <ListItem key = {i} onClick={e => handleClick(sender)} disabled={(sender===selected)}>
                                 <p>{sender}</p>
-                            </div>
+                                { i === Object.keys(allMessages).length - 1 ? null : (<Divider/>)}
+                            </ListItem>
                         )
                     })}
                 </Fieldset>
@@ -61,7 +64,7 @@ const PrivateTab = ({sendPrivate}) => {
             </div>
             <PrivateMessageList
                 allMessages = {allMessages}
-                selected={selected}
+                selectedUser={selected}
                 sendPrivate={sendPrivate}
             />
             <ComposeMessage

@@ -9,8 +9,6 @@ const buildMessage = (message) => {
 const privateMessageSlice = createSlice({
     name:'messages',
     initialState:{
-        "Alessandro":[buildMessage('hola'),buildMessage('amigo')]
-
     },
     reducers: {
         addPrivateMessage: (state, action) => {

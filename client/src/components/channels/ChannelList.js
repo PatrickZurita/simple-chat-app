@@ -1,5 +1,5 @@
 import React from "react";
-import {useHistory} from "react-router-dom";
+import {useHistory,useLocation} from "react-router-dom";
 import styled from "styled-components"
 import { Divider, ListItem, Fieldset} from "react95";
 import capitalize from "../../helper/capitalize";
@@ -34,6 +34,7 @@ const Wrapper = styled.div`
 const ChannelList = ({clickedButton}) => {
     const channels = ["movies","games","food"]
     const history = useHistory();
+    const location = useLocation();
     const handleClick = (route) => {
         history.push(`/${route}`)
     }
@@ -44,7 +45,7 @@ const ChannelList = ({clickedButton}) => {
                     channels.map((channel, i) => {
                         return (
                             <div className={"channel-button"} key={i} onClick={e =>handleClick(channel)}>
-                                <ListItem key = {i} onClick={clickedButton}>
+                                <ListItem key = {i} onClick={clickedButton} disabled = {channel === location.pathname.substr(1)}>
                                     {capitalize(channel)}
                                 </ListItem>
                                 { i === channels.length - 1 ? null : (<Divider/>)}
