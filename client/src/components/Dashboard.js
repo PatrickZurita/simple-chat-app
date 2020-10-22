@@ -1,26 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {useSocket} from "../contexts/SocketProvider";
 import {useLocation} from "react-router-dom"
-import {
-    Tabs,
-    Tab,
-    TabBody,
-    Window,
-    WindowHeader,
-    Panel,
-    WindowContent,
-    Fieldset,
-    NumberField,
-    Checkbox
-} from 'react95';
+import {useDispatch} from "react-redux";
+import {TabBody, Window, WindowContent, WindowHeader} from 'react95';
 import styled from "styled-components"
 import capitalize from "../helper/capitalize";
 import TabBar from "./tabs/TabBar";
 import ChannelTab from "./tabs/ChannelTab";
+import PrivateTab from "./tabs/PrivateTab";
+import  { addPrivateMessage } from "../features/messages/privateMessageSlice"
+
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    width: 60vw;
+    min-width: 50vw;
 `
 const Dashboard = ({name}) => {
     const [channel, setChannel] = useState('')
@@ -29,28 +22,38 @@ const Dashboard = ({name}) => {
     const [activeTab, setActiveTab] = useState(0)
 
     const socket = useSocket(),{pathname} = useLocation();
+
     const handleTabChange = (e, value) => setActiveTab(value)
-    const appendMessage = (name, body) => {
-        setMessages([...messages,{
-            timestamp: new Date().toLocaleTimeString("en-US", {
-                hour12: true,
-                hour: "numeric",
-                minute: "numeric",
-            }).toLowerCase(),
-            senderName: name,
-            text: body
-        }])
+    const getTimeStamp = () =>{
+        return new Date().toLocaleTimeString("en-US", {
+            hour12: true,
+            hour: "numeric",
+            minute: "numeric",
+        }).toLowerCase()
+    }
+    const buildMessage = (senderName,message) => {
+        return {
+            timestamp: getTimeStamp(),
+            senderName: senderName,
+            message: message
+        }
     }
     const addUser = (name) => setUsers([...users, name])
     const removeUser = (name) => {
         let index = users.indexOf(name)
         setUsers(users.splice(index,1))
     }
+    const appendMessage = (name, body) => {
+        setMessages([...messages,buildMessage(name,body)])
+    }
     const sendMessage = (message) => {
         if ( message !== '') {
             socket.emit('send-chat-message',channel, message)
             appendMessage('You',message)
         }
+    }
+    const sendPrivateMessage = (id,message) => {
+        if (message !== '') socket.emit('send-private-message',id,message)
     }
     if (socket !== null) {
         socket.on('user-connected', name => {
@@ -87,7 +90,10 @@ const Dashboard = ({name}) => {
                             users = {users}
                             sendMessage = {sendMessage}
                        />;
-            case 1: return <h1>fasfa</h1>;
+            case 1:
+                return <PrivateTab
+                            sendPrivate = {sendPrivateMessage}
+                       />;
             default: return null
         }
     }

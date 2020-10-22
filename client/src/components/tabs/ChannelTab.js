@@ -31,10 +31,7 @@ const ChannelTab = ({messages,channel,name,users,sendMessage}) => {
                         variant={"well"}
                         style={{width:"100%",height:"50vh",overflowY:"auto"}}
                     >
-                        <MessageList
-                            messages={messages}
-                            currentChannel={channel}
-                            currentName ={name}/>
+                        <MessageList currentName ={name} messages={messages}/>
                     </Panel>
                     <UserList users={users}/>
                 </div>

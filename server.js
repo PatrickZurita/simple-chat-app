@@ -14,14 +14,17 @@ const channels = {
     music : {
         users: {}
     }
-
-
 }
+
 io.on('connection', socket => {
     socket.on('new-user', (channel, name) => {
         socket.join(channel)
+        socket.join(name)
         channels[channel].users[socket.id] = name
         socket.to(channel).broadcast.emit('user-connected', name)
+    })
+    socket.on('send-private-message', (recipient,message) => {
+        socket.broadcast.to(recipient).emit('receive-private-message',{recipient,message})
     })
     socket.on('send-chat-message', (channel, message) => {
         socket.to(channel).broadcast.emit('chat-message', {
@@ -29,13 +32,14 @@ io.on('connection', socket => {
             name: channels[channel].users[socket.id]
         })
     })
-    socket.on('disconnect', () => {
-        getUserChannels(socket).forEach(channel => {
-            socket.to(channel).broadcast.emit('user-disconnected', channels[channel].users[socket.id])
-            delete channels[channel].users[socket.id]
-        })
+    socket.on('unsubscribe', ({channel, name}) => {
+        socket.leave(channel);
+        socket.to(channel).emit('disconnected',channels[channel].users[socket.id])
+        delete channels[channel].users[socket.id]
     })
+
 })
+
 
 function getUserChannels(socket) {
     return Object.entries(channels).reduce((names, [name, channel]) => {

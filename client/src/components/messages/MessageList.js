@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef, useEffect} from "react";
 import styled from "styled-components"
 import Message from "./Message";
 
@@ -40,13 +40,21 @@ const Wrapper = styled.div`
     }
   }
 `
-const MessageList = ({messages, currentChannel, currentName}) => {
+const MessageList = ({messages}) => {
+    const lastMessageRef = useRef()
+    useEffect(()=> {
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({smooth:true})
+        }
+    })
     return (
         <Wrapper>
                 <div className={"message-list"}>
                     {messages.map((message, i) => {
+                        const lastMessage = messages.length - 1 === i
                         return (
                             <Message
+                                reference = {lastMessage ? lastMessageRef : null}
                                 key = {i}
                                 {...message}
                             />

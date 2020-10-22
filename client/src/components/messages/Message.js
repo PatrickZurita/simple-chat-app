@@ -6,11 +6,11 @@ const StyledMessage = styled.div`
     align-content: center;
 `
 
-const Message = ({timestamp,senderName,text}) => {
+const Message = ({reference,timestamp,senderName,message}) => {
     const isSystemMessage = senderName === 'System'
     return (
-        <StyledMessage isSystemMessage>
-            <p>{`${timestamp} ${isSystemMessage ? '' : senderName + ':'} ${text}`}</p>
+        <StyledMessage isSystemMessage ref = {reference}>
+            <p>{`${timestamp} ${isSystemMessage ? '' : senderName + ':'} ${message}`}</p>
         </StyledMessage>
     )
 }
