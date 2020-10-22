@@ -11,6 +11,7 @@ import getTimeStamp from "../helper/getTimeStamp";
 import  { addPrivateMessage } from "../app/features/messages/privateMessageSlice"
 import ms_sans_serif from "react95/dist/fonts/ms_sans_serif.woff2";
 import ms_sans_serif_bold from "react95/dist/fonts/ms_sans_serif_bold.woff2";
+import EditNameTab from "./tabs/EditNameTab";
 
 const Wrapper = styled.div`
     @font-face {
@@ -35,7 +36,7 @@ const Wrapper = styled.div`
         align-items: center;
     }
 `
-const Dashboard = ({name}) => {
+const Dashboard = ({name,onNameChange}) => {
     const [channel, setChannel] = useState('')
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState([])
@@ -117,6 +118,11 @@ const Dashboard = ({name}) => {
                 return <PrivateTab
                             sendPrivate = {sendPrivateMessage}
                        />;
+            case 2:
+                return <EditNameTab
+                            onNameChange = {onNameChange}
+                            currentName = {name}
+                       />
             default: return null
         }
     }
@@ -125,7 +131,7 @@ const Dashboard = ({name}) => {
             <Window>
                 <WindowHeader className = "window-header">
                     Welcome {name}, to the best! chat app
-                    <Button>
+                    <Button onClick={()=> {window.location.href = '/'}}>
                         &times;
                     </Button>
                 </WindowHeader>
