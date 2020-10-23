@@ -1,6 +1,10 @@
 console.log('starting server!')
+const path = require('path')
+const express = require('express')
+const app = express();
+const server = require('http').createServer(app);
 const port = process.env.PORT || 4000
-const io = require('socket.io')(port)
+const io = require('socket.io')(server)
 const channels = {
     food : {
         users: {}
@@ -33,6 +37,8 @@ const channels = {
         users: {}
     }
 }
+app.use(express.static(path.join(__dirname,'../../build')))
+app.get('/',(req,res,next) => res.sendFile(__dirname + './index.html'))
 io.on('connection', socket => {
     socket.on('new-user', (channel, name) => {
         socket.join(channel)
@@ -63,5 +69,5 @@ io.on('connection', socket => {
     })
 
 })
-
-
+console.log(`Server listening to ${port}`)
+server.listen(port)
