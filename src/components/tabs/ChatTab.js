@@ -1,6 +1,6 @@
 import React from "react";
 import ChannelList from "../channels/ChannelList";
-import {Cutout, Panel} from "react95";
+import {Cutout} from "react95";
 import MessageList from "../messages/MessageList";
 import UserList from "../users/UserList";
 import MessageInput from "../messages/MessageInput";

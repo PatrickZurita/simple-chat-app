@@ -35,6 +35,7 @@ const PrivateMessageList = ({allMessages,selectedUser,sendPrivate}) => {
                     style={{width:"100%",height:"39vh",overflowY:"auto",marginBottom:"1vh"}}
                 >
                     { allMessages[selectedUser].map((item, i) => {
+                        console.log(allMessages)
                         const lastMessage = allMessages[selectedUser].length - 1 === i
                         return (
                             <PrivateMessage

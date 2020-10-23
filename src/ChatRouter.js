@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom"
 import Dashboard from "./components/Dashboard";
 import {SocketProvider} from "./contexts/SocketProvider";

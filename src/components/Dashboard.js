@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useSocket} from "../contexts/SocketProvider";
 import {useLocation} from "react-router-dom"
 import {useDispatch} from "react-redux";
@@ -90,6 +90,7 @@ const Dashboard = ({name,onNameChange}) => {
                 dispatch(addPrivateMessage(data))
             })
         }
+        // eslint-disable-next-line
     },[socket])
     useEffect(() => {
         //Create new User
@@ -102,6 +103,7 @@ const Dashboard = ({name,onNameChange}) => {
         setMessages([])
         if (socket == null) return
         socket.emit('unsubscribe',{channel:channel,name:name})
+        // eslint-disable-next-line
     },[pathname])
 
     const renderSwitch = (active) => {

@@ -38,7 +38,9 @@ const channels = {
     }
 }
 app.use(express.static(path.join(__dirname,'../../build')))
-app.get('/',(req,res,next) => res.sendFile(__dirname + './index.html'))
+app.get('/:slug',(req,res,next) => {
+    res.sendFile(path.resolve(__dirname,'../../build') + '/index.html')
+})
 io.on('connection', socket => {
     socket.on('new-user', (channel, name) => {
         socket.join(channel)

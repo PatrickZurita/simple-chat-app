@@ -1,6 +1,5 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {StyledMessage} from "./StyledMessage";
-import {Button, Tooltip} from "react95";
 import styled from "styled-components"
 
 const Delete = styled.div`
